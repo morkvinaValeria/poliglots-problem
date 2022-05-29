@@ -1,5 +1,6 @@
 import random
 from time import time
+from sys import argv
 from exact import Exact
 from localSearch import LocalSearch
 from genetic import Genetic
@@ -64,7 +65,11 @@ def deltaF(f, fopt):
 def average(lst):
     return sum(lst) / len(lst)
 
+params = {}
+for p in argv[1:]:
+    key = p.split('=')[0]
+    value = p.split('=')[1]
+    params[key] = value
+    print(f'Setting param {key} to {value}')
 
-Rmax = 50
-Itasks_max = 5
-launch(Rmax, Itasks_max, True)
+launch(int(params['r_max']), int(params['i_tasks_max']), params['log'] == '1')
