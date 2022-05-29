@@ -4,15 +4,15 @@ import random
 
 
 class Genetic:
-    def __init__(self, L, T, H_max, H_maxconst, log=False):
+    def __init__(self, L, T, log=False):
         self.L = L
         self.m = len(L)
         self.T = T
         self.Mu = int(self.m * 0.1) if int(self.m * 0.1) >= 3 else 3
         self.Lambda = self.Mu
         self.ws = self.Mu * 100
-        self.H_max = H_max
-        self.H_maxconst = H_maxconst
+        self.H_max = self.m * 20
+        self.H_maxconst = int(self.H_max * 0.1)
         self.log = log
 
     def apply(self):
@@ -116,10 +116,10 @@ class Genetic:
         return wheel
 
     def choose_parents(self, wheel):
-        pnt1_i = random.randint(0, self.ws-1)
+        pnt1_i = random.randint(0, len(wheel)-1)
         pnt2_i = pnt1_i
         while wheel[pnt1_i] == wheel[pnt2_i]:
-            pnt2_i = random.randint(0, self.ws-1)
+            pnt2_i = random.randint(0, len(wheel)-1)
         return [wheel[pnt1_i], wheel[pnt2_i]]
 
     def gen_children(self, pnt1, pnt2):
