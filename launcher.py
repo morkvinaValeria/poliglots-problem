@@ -65,11 +65,26 @@ def deltaF(f, fopt):
 def average(lst):
     return sum(lst) / len(lst)
 
-params = {}
-for p in argv[1:]:
-    key = p.split('=')[0]
-    value = p.split('=')[1]
-    params[key] = value
-    print(f'Setting param {key} to {value}')
+if argv[1] == 'help':
+    print('Poliglots problem CLI manual')
+    print('-------------------------------------------------------------------')
+    print('Values for the following arguments is assigned with \'=\' character')
+    print('+  r_max     - max problem size')
+    print('+  i_tasks   - quantity of random tasks of each problem size')
+    print('+  log       - 0 or 1 disables or enables logs, 0 by default')
+    print('+  task_file - relative path of .xlsx file with problem description, \ncan be used only separately from r_max, i_tasks')
+    print('-------------------------------------------------------------------')
+    print('The follwing arguments are flags, they are passed without values')
+    print('+  exact   - launches exact algorithm (exaustive search)')
+    print('+  genetic - launches genetic algorithm')
+    print('+  local   - launches local search algorithm')
+    print('+  plots   - show launch results comparison plots')
+else: 
+    params = {'log': 0}
+    for p in argv[1:]:
+        key = p.split('=')[0]
+        value = p.split('=')[1]
+        params[key] = value
+        print(f'Setting param {key} to {value}')
 
-launch(int(params['r_max']), int(params['i_tasks_max']), params['log'] == '1')
+    launch(int(params['r_max']), int(params['i_tasks']), params['log'] == '1')
