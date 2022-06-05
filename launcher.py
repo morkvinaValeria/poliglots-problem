@@ -1,9 +1,11 @@
 import random
 from time import time
 from sys import argv
+import os
 from exact import Exact
 from localSearch import LocalSearch
 from genetic import Genetic
+from pandas import read_excel
 
 
 # add argv to read file name, R, Itasks, log
@@ -66,6 +68,21 @@ def individual(k, log=False):
     print(f'Genetic algorithm: A={A2}, B={B2}, F={F2}\n')
 
 
+def individual_from_file(path, log=False, run_exact=False, run_local=False, run_genetic=False):
+    print(f'\nReading file: {path}')
+    if os.path.exists(path):
+        file = read_excel(path, index_col=0, header=None)
+        print('\nParsed task:')
+        print(file)
+        n,m = file.shape
+        L = [f'Lang#{i+1}' for i in range(m+1)]
+        T = []
+        for row in file.itertuples():
+            T.append([row[cel] for cel in row])
+    else:
+        print('Cannot localte given file or the file does not exist')
+
+
 def generate_task(k):
     T = []
     L = [f'Lang#{i+1}' for i in range(0, k)]
@@ -90,7 +107,7 @@ if argv[1] == 'help':
     print('+  r_max     - max problem size (for statistical experiments)')
     print('+  i_tasks   - quantity of random tasks of each problem size (for statistical experiments)')
     print('+  task_size - launches one demonstrative task of geiven problem size (pass m,n e.g. 100,10)')
-    print('+  task_file - relative path of .xlsx file with problem description, \ncan be used only separately from r_max, i_tasks')
+    print('+  task_file - relative path of .xlsx file with problem description in form of matrix T, \ncan be used only separately from r_max, i_tasks')
     print('+  log       - 0 or 1 disables or enables logs, 0 by default')
     print('-------------------------------------------------------------------')
     print('The follwing arguments are flags, they are passed without values')
@@ -107,6 +124,8 @@ else:
         print(f'Setting param {key} to {value}')
     if 'task_size' in params:
         individual(int(params['task_size']), params['log'] == '1')
+    elif 'task_file' in params: 
+        individual_from_file(params['task_file'], params['log'] == '1')
     elif 'r_max' in params and 'i_tasks' in params:
         experiment(int(params['r_max']), int(
             params['i_tasks']), params['log'] == '1')
