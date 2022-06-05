@@ -15,7 +15,7 @@ def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genet
         alltimes = [[0]*Itasks for _ in range(3)]
         delta_alltimes = [[0]*Itasks for _ in range(3)]
         for i in range(0, Itasks):
-            L, T = generate_task(k)
+            L, T = generate_task(k, 10*k)
 
             if run_exact:
                 exact = Exact(L, T, log=False)
@@ -56,10 +56,7 @@ def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genet
 def individual(size, log=False, run_exact=False, run_local=False, run_genetic=False):
     m = int(size.split(',')[0])
     n = int(size.split(',')[1])
-    T = []
-    L = [f'Lang#{i+1}' for i in range(0, m)]
-    for _ in range(0, n):
-        T.append([random.randint(0, 1) for _ in range(0, m)])
+    L, T = generate_task(m, n)
     print(f'\nm={m}, n={n}\n')
     for row in T:
         print(*row, sep=' ')
@@ -77,11 +74,11 @@ def individual(size, log=False, run_exact=False, run_local=False, run_genetic=Fa
         print(f'Genetic algorithm: A={A}, B={B}, F={F}\n')
 
 
-def generate_task(k):
+def generate_task(m, n):
     T = []
-    L = [f'Lang#{i+1}' for i in range(0, k)]
-    for _ in range(0, 10*k):
-        T.append([random.randint(0, 1) for _ in range(0, k)])
+    L = [f'Lang#{i+1}' for i in range(0, m)]
+    for _ in range(0, n):
+        T.append([random.randint(0, 1) for _ in range(0, m)])
     return L, T
 
 
