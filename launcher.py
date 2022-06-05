@@ -64,11 +64,8 @@ def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genet
             print(f'Genetic algorithm:\n {deltas[2]}')
 
 
-def individual(size, log=False, run_exact=False, run_local=False, run_genetic=False):
-    m = int(size.split(',')[0])
-    n = int(size.split(',')[1])
-    L, T = generate_task(m, n)
-    print(f'\nm={m}, n={n}\n')
+def individual(L, T, log=False, run_exact=False, run_local=False, run_genetic=False):
+    print(f'\nm={len(L[0])}, n={len(L)}\n')
     for row in T:
         print(*row, sep=' ')
     Aopt, Bopt, Fopt, A1, B1, F1, A2, B2, F2 = None, None, None, None, None, None, None, None, None
@@ -91,7 +88,7 @@ def individual(size, log=False, run_exact=False, run_local=False, run_genetic=Fa
         print(f'Genetic algorithm: A={A2}, B={B2}, F={F2}')
 
 
-def individual_from_file(path, log=False, run_exact=False, run_local=False, run_genetic=False):
+def generate_task_from_file(path):
     print(f'\nReading file: {path}')
     if os.path.exists(path):
         file = read_excel(path, index_col=0, header=None)
@@ -102,8 +99,9 @@ def individual_from_file(path, log=False, run_exact=False, run_local=False, run_
         T = []
         for row in file.itertuples():
             T.append([row[cel] for cel in row])
+        return L, T
     else:
-        print('Cannot localte given file or the file does not exist')
+        raise Exception('Cannot localte given file or the file does not exist')
 
 
 def generate_task(m, n):
@@ -146,8 +144,14 @@ else:
         params[key] = value
         print(f'Setting param {key} to {value}')
     if 'task_size' in params:
-        individual(params['task_size'], params['log'] == '1', params['exact'], params['local'], params['genetic'])
+        m,n = params['task_size'].split(',')
+        L, T = generate_task(int(m), int(n))
+        individual(L, T, params['log'] == '1', params['exact'], params['local'], params['genetic'])
     elif 'task_file' in params: 
-        individual_from_file(params['task_file'], params['log'] == '1', params['exact'], params['local'], params['genetic'])
+        try:
+            L, T = generate_task_from_file(params['task_file'])
+            individual(L, T, params['log'] == '1', params['exact'], params['local'], params['genetic'])
+        except Exception as e: 
+            print(e)
     elif 'r_max' in params and 'i_tasks' in params:
         experiment(int(params['r_max']), int(params['i_tasks']), params['log'] == '1',  params['exact'], params['local'], params['genetic'])
