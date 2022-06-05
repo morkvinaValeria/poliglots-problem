@@ -17,28 +17,28 @@ def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genet
         for i in range(0, Itasks):
             L, T = generate_task(k)
 
-            if run_exact: 
+            if run_exact:
                 exact = Exact(L, T, log=False)
                 t_start_exact = time()
                 Aopt, Bopt, Fopt = exact.apply()
                 t_stop_exact = time()
                 alltimes[0][i] = t_stop_exact - t_start_exact
                 delta_alltimes[0][i] = 0
-            if run_local: 
+            if run_local:
                 locSearch = LocalSearch(L, T, log)
                 t_start_ls = time()
                 A1, B1, F1 = locSearch.apply()
                 t_stop_ls = time()
                 alltimes[1][i] = t_stop_ls - t_start_ls
                 delta_alltimes[1][i] = deltaF(F1, Fopt)
-            if run_genetic: 
+            if run_genetic:
                 genetic = Genetic(L, T, log)
                 t_start_genetic = time()
                 A2, B2, F2 = genetic.apply()
                 t_stop_genetic = time()
                 alltimes[2][i] = t_stop_genetic - t_start_genetic
                 delta_alltimes[2][i] = deltaF(F2, Fopt)
-            
+
         times[0].append(average(alltimes[0]))
         times[1].append(average(alltimes[1]))
         times[2].append(average(alltimes[2]))
@@ -53,17 +53,28 @@ def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genet
     print(f'Average delta for genetic algorithm:\n {deltas[2]}')
 
 
-def individual(k, log=False):
-    L, T = generate_task(k)
-    exact = Exact(L, T, log=False)
-    locSearch = LocalSearch(L, T, log)
-    genetic = Genetic(L, T, log)
-    Aopt, Bopt, Fopt = exact.apply()
-    print(f'\nExact algorithm: A={Aopt}, B={Bopt}, F={Fopt}\n')
-    A1, B1, F1 = locSearch.apply()
-    print(f'Local Search algorithm: A={A1}, B={B1}, F={F1}\n')
-    A2, B2, F2 = genetic.apply()
-    print(f'Genetic algorithm: A={A2}, B={B2}, F={F2}\n')
+def individual(size, log=False, run_exact=False, run_local=False, run_genetic=False):
+    m = int(size.split(',')[0])
+    n = int(size.split(',')[1])
+    T = []
+    L = [f'Lang#{i+1}' for i in range(0, m)]
+    for _ in range(0, n):
+        T.append([random.randint(0, 1) for _ in range(0, m)])
+    print(f'\nm={m}, n={n}\n')
+    for row in T:
+        print(*row, sep=' ')
+    if run_exact:
+        exact = Exact(L, T, log=False)
+        A, B, F = exact.apply()
+        print(f'Exact algorithm: A={A}, B={B}, F={F}\n')
+    if run_local:
+        locSearch = LocalSearch(L, T, log)
+        A, B, F = locSearch.apply()
+        print(f'Local Search algorithm: A={A}, B={B}, F={F}\n')
+    if run_genetic:
+        genetic = Genetic(L, T, log)
+        A, B, F = genetic.apply()
+        print(f'Genetic algorithm: A={A}, B={B}, F={F}\n')
 
 
 def generate_task(k):
@@ -80,7 +91,6 @@ def deltaF(f, fopt):
 
 def average(lst):
     return sum(lst) / len(lst)
-    
 
 
 if argv[1] == 'help':
@@ -106,7 +116,7 @@ else:
         params[key] = value
         print(f'Setting param {key} to {value}')
     if 'task_size' in params:
-        individual(int(params['task_size']), params['log'] == '1')
+        individual(params['task_size'], params['log'] == '1')
     elif 'r_max' in params and 'i_tasks' in params:
         experiment(int(params['r_max']), int(
             params['i_tasks']), params['log'] == '1')
