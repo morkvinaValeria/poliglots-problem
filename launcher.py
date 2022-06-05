@@ -63,11 +63,11 @@ def individual(size, log=False, run_exact=False, run_local=False, run_genetic=Fa
     if run_exact:
         exact = Exact(L, T, log=False)
         A, B, F = exact.apply()
-        print(f'Exact algorithm: A={A}, B={B}, F={F}\n')
+        print(f'Exact algorithm: A={A}, B={B}, F={F}')
     if run_local:
         locSearch = LocalSearch(L, T, log)
         A, B, F = locSearch.apply()
-        print(f'Local Search algorithm: A={A}, B={B}, F={F}\n')
+        print(f'Local Search algorithm: A={A}, B={B}, F={F}')
     if run_genetic:
         genetic = Genetic(L, T, log)
         A, B, F = genetic.apply()
@@ -106,14 +106,16 @@ if argv[1] == 'help':
     print('+  local   - launches local search algorithm')
     print('+  plots   - show launch results comparison plots')
 else:
-    params = {'log': 0}
+    params = {'log': 0, 'exact': False,
+              'genetic': False, 'local': False, 'plots': False}
     for p in argv[1:]:
-        key = p.split('=')[0]
-        value = p.split('=')[1]
+        key = p.split('=')[0] if '=' in p else p
+        value = p.split('=')[1] if '=' in p else True
         params[key] = value
         print(f'Setting param {key} to {value}')
     if 'task_size' in params:
-        individual(params['task_size'], params['log'] == '1')
+        individual(params['task_size'], params['log'] == '1', params['exact']
+                   == True, params['local'] == True, params['genetic'] == True)
     elif 'r_max' in params and 'i_tasks' in params:
         experiment(int(params['r_max']), int(
             params['i_tasks']), params['log'] == '1')
