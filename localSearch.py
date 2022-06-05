@@ -10,6 +10,8 @@ class LocalSearch:
         self.log = log
 
     def apply(self):
+        if(self.log):
+            print('\n\n*** Local Search ***\n')
         Ah, Bh = self.__generate_initial_languages()
         CritVal = self.__calculate_crit_val(Ah, Bh)
         if self.log:

@@ -6,6 +6,8 @@ class Exact:
         self.log = log
 
     def apply(self):
+        if(self.log):
+            print('\n*** Exact Algorithm ***')
         LPairs = self.__find_all_pairs()
         bestSol = None
         goalVals = None
@@ -31,7 +33,7 @@ class Exact:
                 goalVals = [A, B]
         if self.log:
             print(
-                f'\n\nResult: A,B=({self.L[goalVals[0]]},{self.L[goalVals[1]]}), F = {bestSol}')
+                f'\nResult: A,B=({self.L[goalVals[0]]},{self.L[goalVals[1]]}), F = {bestSol}')
         return self.L[goalVals[0]], self.L[goalVals[1]], bestSol
 
     def __find_all_pairs(self):
