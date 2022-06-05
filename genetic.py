@@ -16,6 +16,8 @@ class Genetic:
         self.log = log
 
     def apply(self):
+        if(self.log):
+            print('\n\n*** Genetic Algorithm ***\n')
         P = self.gen_pop_shot_gun()
         if self.log:
             print(f'Generated init population: \n{P}')
