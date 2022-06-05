@@ -6,7 +6,7 @@ class LocalSearch:
         self.L = L
         self.T = T
         self.m = len(L)
-        self.Hmax = 50  # ??
+        self.Hmax = 0.45*self.m
         self.log = log
 
     def apply(self):
@@ -18,7 +18,7 @@ class LocalSearch:
             if self.log:
                 print('Perfect case found, F = 0')
             return self.L[Ah], self.L[Bh], CritVal
-        r = 2 if self.m < 20 else int(0.05*self.m+1)
+        r = int(round(0.05*self.m + 1, 1))
         Delta = -1
         h = 0
         ExploredPairs = [[Ah, Bh]]
@@ -35,13 +35,13 @@ class LocalSearch:
                     Delta = CritVal - Val
                     if self.log:
                         print(
-                            f'i = {i}   ({self.L[Ay]},{self.L[By]}), F = {Val};   ▲ = {Delta}')
+                            f'i = {h}   ({self.L[Ay]},{self.L[By]}), F = {Val};   ▲ = {Delta}')
                     h = h + 1
                     ExploredPairs.append([Ay, By])
                 else:
                     if self.log:
                         print(
-                            f'i = {i}   ({self.L[Ay]},{self.L[By]}) was already explored')
+                            f'         ({self.L[Ay]},{self.L[By]}) was already explored')
                 i = i + 1
             if (Delta > 0):
                 if self.log:
