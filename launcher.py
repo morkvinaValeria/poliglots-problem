@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 from time import time
 from sys import argv
 from exact import Exact
@@ -6,12 +7,11 @@ from localSearch import LocalSearch
 from genetic import Genetic
 
 
-# add argv to read file name, R, Itasks, log
-
-def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genetic=False):
+def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genetic=False, plots=False):
     times = [[] for _ in range(3)]
     deltas = [[] for _ in range(3)]
-    for k in range(4, R+1, 10):
+    k_range = range(4, R+1, 5)
+    for k in k_range:
         alltimes = [[0]*Itasks for _ in range(3)]
         delta_alltimes = [[0]*Itasks for _ in range(3)]
         for i in range(0, Itasks):
@@ -58,8 +58,30 @@ def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genet
         print('\n** Average Delta **')
         if run_local:
             print(f'Local search algorithm:\n {deltas[1]}')
-        else:
+        if genetic:
             print(f'Genetic algorithm:\n {deltas[2]}')
+
+    if(plots):
+
+        plt.figure(1)
+        plt.plot(k_range, times[0], color='#F1F0C0', label='Exact Algorithm')
+        plt.plot(k_range, times[1], color='#B1BCE6', label='Local Search')
+        plt.plot(k_range, times[2], color='#B7E5DD', label='Genetic Algorithm')
+        plt.title("Relation of dimension to average time ")
+        plt.legend()
+        plt.ylabel('Average Time')
+        plt.xlabel('Task Dimension k, m=k, n=10*k')
+
+        plt.figure(2)
+        plt.plot(k_range, deltas[0], color='#F1F0C0', label='Exact Algorithm')
+        plt.plot(k_range, deltas[1], color='#B1BCE6', label='Local Search')
+        plt.plot(k_range, deltas[2], color='#B7E5DD',
+                 label='Genetic Algorithm')
+        plt.title("Relation of dimension to average delta")
+        plt.legend()
+        plt.ylabel('Average Delta')
+        plt.xlabel('Task Dimension k, m=k, n=10*k')
+        plt.show()
 
 
 def individual(size, log=False, run_exact=False, run_local=False, run_genetic=False):
@@ -129,8 +151,8 @@ else:
         params[key] = value
         print(f'Setting param {key} to {value}')
     if 'task_size' in params:
-        individual(params['task_size'], params['log'] == '1', params['exact']
-                   == True, params['local'] == True, params['genetic'] == True)
+        individual(params['task_size'], params['log'] == '1',
+                   params['exact'], params['local'], params['genetic'])
     elif 'r_max' in params and 'i_tasks' in params:
-        experiment(int(params['r_max']), int(params['i_tasks']), params['log'] == '1',  params['exact']
-                   == True, params['local'] == True, params['genetic'] == True)
+        experiment(int(params['r_max']), int(params['i_tasks']), params['log'] ==
+                   '1',  params['exact'], params['local'], params['genetic'], params['plots'])
