@@ -6,7 +6,6 @@ class Exact:
         self.log = log
 
     def apply(self):
-        print(self.L)
         LPairs = self.__find_all_pairs()
         bestSol = None
         goalVals = None

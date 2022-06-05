@@ -8,30 +8,30 @@ from genetic import Genetic
 
 # add argv to read file name, R, Itasks, log
 
-def launch(R, Itasks, log=False, exact=False, local=False, genetic=False):
-    times = [[0]*R for _ in range(3)]
-    deltas = [[0]*R for _ in range(3)]
-    for k in range(4, R+1):
+def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genetic=False):
+    times = [[] for _ in range(3)]
+    deltas = [[] for _ in range(3)]
+    for k in range(4, R+1, 10):
         alltimes = [[0]*Itasks for _ in range(3)]
         delta_alltimes = [[0]*Itasks for _ in range(3)]
         for i in range(0, Itasks):
             L, T = generate_task(k)
 
-            if exact: 
+            if run_exact: 
                 exact = Exact(L, T, log=False)
                 t_start_exact = time()
                 Aopt, Bopt, Fopt = exact.apply()
                 t_stop_exact = time()
                 alltimes[0][i] = t_stop_exact - t_start_exact
                 delta_alltimes[0][i] = 0
-            if local: 
+            if run_local: 
                 locSearch = LocalSearch(L, T, log)
                 t_start_ls = time()
                 A1, B1, F1 = locSearch.apply()
                 t_stop_ls = time()
                 alltimes[1][i] = t_stop_ls - t_start_ls
                 delta_alltimes[1][i] = deltaF(F1, Fopt)
-            if genetic: 
+            if run_genetic: 
                 genetic = Genetic(L, T, log)
                 t_start_genetic = time()
                 A2, B2, F2 = genetic.apply()
@@ -39,17 +39,31 @@ def launch(R, Itasks, log=False, exact=False, local=False, genetic=False):
                 alltimes[2][i] = t_stop_genetic - t_start_genetic
                 delta_alltimes[2][i] = deltaF(F2, Fopt)
             
-        
-        times[0][k-1], times[1][k-1], times[2][k-1] = average(
-            alltimes[0]), average(alltimes[1]), average(alltimes[2])
-        deltas[0][k-1], deltas[1][k-1], deltas[2][k-1] = average(
-            delta_alltimes[0]), average(delta_alltimes[1]), average(delta_alltimes[2])
-    print(times[0])
-    print(times[1])
-    print(times[2])
-    print('Deltas:')
-    print(deltas[1])
-    print(deltas[2])
+        times[0].append(average(alltimes[0]))
+        times[1].append(average(alltimes[1]))
+        times[2].append(average(alltimes[2]))
+        deltas[0].append(average(delta_alltimes[0]))
+        deltas[1].append(average(delta_alltimes[1]))
+        deltas[2].append(average(delta_alltimes[2]))
+
+    print(f'\nAverage time for exact algorithm:\n {times[0]}')
+    print(f'Average time for local search algorithm:\n {times[1]}')
+    print(f'Average time for genetic algorithm:\n {times[2]}\n')
+    print(f'Average delta for local search algorithm:\n {deltas[1]}')
+    print(f'Average delta for genetic algorithm:\n {deltas[2]}')
+
+
+def individual(k, log=False):
+    L, T = generate_task(k)
+    exact = Exact(L, T, log=False)
+    locSearch = LocalSearch(L, T, log)
+    genetic = Genetic(L, T, log)
+    Aopt, Bopt, Fopt = exact.apply()
+    print(f'\nExact algorithm: A={Aopt}, B={Bopt}, F={Fopt}\n')
+    A1, B1, F1 = locSearch.apply()
+    print(f'Local Search algorithm: A={A1}, B={B1}, F={F1}\n')
+    A2, B2, F2 = genetic.apply()
+    print(f'Genetic algorithm: A={A2}, B={B2}, F={F2}\n')
 
 
 def generate_task(k):
@@ -68,6 +82,7 @@ def average(lst):
     return sum(lst) / len(lst)
     
 
+
 if argv[1] == 'help':
     print('Poliglots problem CLI manual')
     print('-------------------------------------------------------------------')
@@ -83,12 +98,15 @@ if argv[1] == 'help':
     print('+  genetic - launches genetic algorithm')
     print('+  local   - launches local search algorithm')
     print('+  plots   - show launch results comparison plots')
-else: 
+else:
     params = {'log': 0}
     for p in argv[1:]:
         key = p.split('=')[0]
         value = p.split('=')[1]
         params[key] = value
         print(f'Setting param {key} to {value}')
-
-    launch(int(params['r_max']), int(params['i_tasks']), params['log'] == '1')
+    if 'task_size' in params:
+        individual(int(params['task_size']), params['log'] == '1')
+    elif 'r_max' in params and 'i_tasks' in params:
+        experiment(int(params['r_max']), int(
+            params['i_tasks']), params['log'] == '1')
