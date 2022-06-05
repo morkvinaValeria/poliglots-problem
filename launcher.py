@@ -1,3 +1,4 @@
+from operator import index
 import random
 import matplotlib.pyplot as plt
 from time import time
@@ -114,13 +115,11 @@ def generate_task_from_file(path):
     print(f'\nReading file: {path}')
     if os.path.exists(path):
         file = read_excel(path, index_col=0, header=None)
-        print('\nParsed task:')
-        print(file)
         n, m = file.shape
         L = [f'Lang#{i+1}' for i in range(m+1)]
         T = []
         for row in file.itertuples():
-            T.append([row[cel] for cel in row])
+            T.append([cel for cel in row])
         return L, T
     else:
         raise Exception('Cannot localte given file or the file does not exist')
