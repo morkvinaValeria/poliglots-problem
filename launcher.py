@@ -12,7 +12,7 @@ from pandas import read_excel
 def experiment(R, Itasks, log=False, run_exact=False, run_local=False, run_genetic=False, plots=False):
     times = [[] for _ in range(3)]
     deltas = [[] for _ in range(3)]
-    k_range = range(4, R+1, 5)
+    k_range = range(4, R+1, 1)
     for k in k_range:
         alltimes = [[0]*Itasks for _ in range(3)]
         delta_alltimes = [[0]*Itasks for _ in range(3)]

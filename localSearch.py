@@ -20,7 +20,7 @@ class LocalSearch:
             if self.log:
                 print('Perfect case found, F = 0')
             return self.L[Ah], self.L[Bh], CritVal
-        r = int(round(0.05*self.m + 1, 1))
+        r = int(round(0.1*self.m + 1, 1))
         Delta = -1
         h = 0
         ExploredPairs = [[Ah, Bh]]
