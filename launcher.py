@@ -24,14 +24,16 @@ class Launcher:
     def experiment(self):
         R = int(self.params['r_max'])
         Itasks = int(self.params['i_tasks'])
+        R_step = int(self.params['r_step'])
+        n_ratio = int(self.params['n_ratio'])
         times = [[] for _ in range(3)]
         deltas = [[] for _ in range(3)]
-        k_range = range(4, R+1, 1)
+        k_range = range(4, R+1, R_step)
         for k in k_range:
             alltimes = [[0]*Itasks for _ in range(3)]
             delta_alltimes = [[0]*Itasks for _ in range(3)]
             for i in range(0, Itasks):
-                L, T = self.generate_task(k, 10*k)
+                L, T = self.generate_task(k, n_ratio*k)
 
                 if self.run_exact:
                     exact = Exact(L, T, self.log)

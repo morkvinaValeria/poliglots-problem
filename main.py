@@ -9,7 +9,9 @@ if argv[1] == 'help':
     print('-------------------------------------------------------------------')
     print('Values for the following arguments is assigned with \'=\' character')
     print('+  r_max     - max problem size (for statistical experiments)')
+    print('+  r_step    - step of problem sizes until r_max, 1 by default (for statisctical experiments)')
     print('+  i_tasks   - quantity of random tasks of each problem size (for statistical experiments)')
+    print('+  n_ratio   - ratio of number of poliglots to number of languages, 10 by default')
     print('+  task_size - launches one demonstrative task of geiven problem size (pass m,n e.g. 100,10)')
     print('+  task_file - relative path of .xlsx file with problem description in form of matrix T, \ncan be used only separately from r_max, i_tasks')
     print('+  log       - 0 or 1 disables or enables logs, 0 by default')
@@ -21,7 +23,7 @@ if argv[1] == 'help':
     print('+  plots   - show launch results comparison plots')
 else:
     params = {'log': 0, 'exact': False,
-              'genetic': False, 'local': False, 'plots': False}
+              'genetic': False, 'local': False, 'plots': False, 'r_interval': 1, 'n_ratio': 10}
     for p in argv[1:]:
         key = p.split('=')[0] if '=' in p else p
         value = p.split('=')[1] if '=' in p else True
