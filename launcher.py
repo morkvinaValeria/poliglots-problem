@@ -23,12 +23,13 @@ class Launcher:
 
     def experiment(self):
         R = int(self.params['r_max'])
+        R_min = int(self.params['r_min'])
         Itasks = int(self.params['i_tasks'])
         R_step = int(self.params['r_step'])
         n_ratio = int(self.params['n_ratio'])
         times = [[] for _ in range(3)]
         deltas = [[] for _ in range(3)]
-        k_range = range(4, R+1, R_step)
+        k_range = range(R_min, R+1, R_step)
         for k in k_range:
             alltimes = [[0]*Itasks for _ in range(3)]
             delta_alltimes = [[0]*Itasks for _ in range(3)]
