@@ -30,6 +30,7 @@ class Launcher:
         times = [[] for _ in range(3)]
         deltas = [[] for _ in range(3)]
         k_range = range(R_min, R+1, R_step)
+        if not self.log: self.show_progress_bar(0, R)
         for k in k_range:
             alltimes = [[0]*Itasks for _ in range(3)]
             delta_alltimes = [[0]*Itasks for _ in range(3)]
@@ -64,6 +65,7 @@ class Launcher:
             deltas[0].append(self.average(delta_alltimes[0]))
             deltas[1].append(self.average(delta_alltimes[1]))
             deltas[2].append(self.average(delta_alltimes[2]))
+            if not self.log: self.show_progress_bar(k, R)
         print('\033[1m')
         print('\n\n*** Results ***')
         print('\n** Average Time **')
@@ -83,6 +85,12 @@ class Launcher:
 
         if(self.plots):
             self.show_plots(k_range, times, deltas)
+
+    def show_progress_bar(self, completed, size):
+        completed_percent = int(round(completed/size * 100, 0))
+        bar_str = ' ** Solving ' + f'{completed_percent}%' + ' ['+('█'*completed_percent)+('-'*(100-completed_percent))+']' 
+        print(bar_str, end='\r')
+
 
     def show_plots(self, k_range, times, deltas):
         plt.figure(1)

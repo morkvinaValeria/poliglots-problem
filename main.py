@@ -31,6 +31,7 @@ else:
         params[key] = value
         print(f'Setting param {key} to {value}')
     launcher = Launcher(params)
+    print('\n')
     if 'task_size' in params:
         m, n = params['task_size'].split(',')
         L, T = launcher.generate_task(int(m), int(n))
