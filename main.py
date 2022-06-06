@@ -31,15 +31,14 @@ else:
     if 'task_size' in params:
         m, n = params['task_size'].split(',')
         L, T = launcher.generate_task(int(m), int(n))
-        launcher.individual(L, T, params['log'] == '1', params['exact'],
-                   params['local'], params['genetic'])
+        launcher.individual(L, T)
     elif 'task_file' in params:
         try:
             L, T = launcher.generate_task_from_file(params['task_file'])
-            launcher.individual(
-                L, T, params['log'] == '1', params['exact'], params['local'], params['genetic'])
+            launcher.individual(L, T)
         except Exception as e:
             print(e)
     elif 'r_max' in params and 'i_tasks' in params:
-        launcher.experiment(int(params['r_max']), int(params['i_tasks']), params['log'] ==
-                   '1',  params['exact'], params['local'], params['genetic'], params['plots'])
+        launcher.experiment()
+    else:
+        print('Enter valid command, please see help')

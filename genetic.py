@@ -17,7 +17,7 @@ class Genetic:
 
     def apply(self):
         if(self.log):
-            print('\n\n*** Genetic Algorithm ***\n')
+            print('\033[36m'+'\n\n*** Genetic Algorithm ***\n'+'\033[0m')
         P = self.gen_pop_shot_gun()
         if self.log:
             print(f'Generated init population: \n{P}')
@@ -66,6 +66,9 @@ class Genetic:
                 print(
                     f'Exit: max iterations reached with best score: {best_score}')
         lang_genes = [i for i in range(len(best_pers)) if best_pers[i] == 1]
+        if self.log:
+            print(
+                '\033[36m'+f'\nResult: A,B=({self.L[lang_genes[0]]},{self.L[lang_genes[1]]}), F = {best_score}'+'\033[0m')
         return self.L[lang_genes[0]], self.L[lang_genes[1]], best_score
 
     def goal_func(self, chromo):

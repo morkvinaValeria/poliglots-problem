@@ -11,7 +11,7 @@ class LocalSearch:
 
     def apply(self):
         if(self.log):
-            print('\n\n*** Local Search ***\n')
+            print('\033[95m'+'\n\n*** Local Search ***\n'+'\033[0m')
         Ah, Bh = self.__generate_initial_languages()
         CritVal = self.__calculate_crit_val(Ah, Bh)
         if self.log:
@@ -61,7 +61,7 @@ class LocalSearch:
                     else:
                         print(f'\n Best score was not improved')
                     print(
-                        f'\n\nResult: A,B=({self.L[Ah]},{self.L[Bh]}), F = {CritVal}')
+                        '\033[95m' + f'\n\nResult: A,B=({self.L[Ah]},{self.L[Bh]}), F = {CritVal}'+'\033[0m')
                 return self.L[Ah], self.L[Bh], CritVal
 
     def __generate_initial_languages(self):

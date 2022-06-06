@@ -15,16 +15,15 @@ class Launcher:
 
     def __init__(self, params):
         self.params = params
-        self.log = params['log'] == 1
+        self.log = int(params['log']) == 1
         self.plots = params['plots']
         self.run_exact = params['exact']
         self.run_genetic = params['genetic']
         self.run_local = params['local']
-        self.i_tasks = params['i_tasks']
 
     def experiment(self):
-        R = self.params['r_max']
-        Itasks = self.params['i_tasks']
+        R = int(self.params['r_max'])
+        Itasks = int(self.params['i_tasks'])
         times = [[] for _ in range(3)]
         deltas = [[] for _ in range(3)]
         k_range = range(4, R+1, 1)
@@ -62,7 +61,7 @@ class Launcher:
             deltas[0].append(self.average(delta_alltimes[0]))
             deltas[1].append(self.average(delta_alltimes[1]))
             deltas[2].append(self.average(delta_alltimes[2]))
-
+        print('\033[1m')
         print('\n\n*** Results ***')
         print('\n** Average Time **')
         if self.run_exact:
@@ -75,26 +74,36 @@ class Launcher:
             print('\n** Average Delta **')
             if self.run_local:
                 print(f'Local search algorithm:\n {deltas[1]}')
-            if genetic:
+            if self.run_genetic:
                 print(f'Genetic algorithm:\n {deltas[2]}')
+        print('\033[0m')
 
         if(self.plots):
             self.show_plots(k_range, times, deltas)
 
     def show_plots(self, k_range, times, deltas):
         plt.figure(1)
-        plt.plot(k_range, times[0], color='#F1F0C0', label='Exact Algorithm')
-        plt.plot(k_range, times[1], color='#B1BCE6', label='Local Search')
-        plt.plot(k_range, times[2], color='#B7E5DD', label='Genetic Algorithm')
+        if self.run_exact:
+            plt.plot(k_range, times[0], color='#F1F0C0',
+                     label='Exact Algorithm')
+        if self.run_local:
+            plt.plot(k_range, times[1], color='#B1BCE6', label='Local Search')
+        if self.run_genetic:
+            plt.plot(k_range, times[2], color='#B7E5DD',
+                     label='Genetic Algorithm')
         plt.title("Relation of dimension to average time ")
         plt.legend()
         plt.ylabel('Average Time')
         plt.xlabel('Task Dimension k, m=k, n=10*k')
         plt.figure(2)
-        plt.plot(k_range, deltas[0], color='#F1F0C0', label='Exact Algorithm')
-        plt.plot(k_range, deltas[1], color='#B1BCE6', label='Local Search')
-        plt.plot(k_range, deltas[2], color='#B7E5DD',
-                 label='Genetic Algorithm')
+        if self.run_exact:
+            plt.plot(k_range, deltas[0],
+                     color='#F1F0C0', label='Exact Algorithm')
+        if self.run_local:
+            plt.plot(k_range, deltas[1], color='#B1BCE6', label='Local Search')
+        if self.run_genetic:
+            plt.plot(k_range, deltas[2], color='#B7E5DD',
+                     label='Genetic Algorithm')
         plt.title("Relation of dimension to average delta")
         plt.legend()
         plt.ylabel('Average Delta')
@@ -107,6 +116,7 @@ class Launcher:
             print(*row, sep=' ')
         Aopt, Bopt, Fopt, A1, B1, F1, A2, B2, F2 = None, None, None, None, None, None, None, None, None
         if self.run_exact:
+            print(self.log)
             exact = Exact(L, T, self.log)
             Aopt, Bopt, Fopt = exact.apply()
         if self.run_local:
@@ -115,6 +125,7 @@ class Launcher:
         if self.run_genetic:
             genetic = Genetic(L, T, self.log)
             A2, B2, F2 = genetic.apply()
+        print('\033[1m')
         print('\n\n*** Results ***')
         if self.run_exact:
             print(f'Exact algorithm: A={Aopt}, B={Bopt}, F={Fopt}')
@@ -122,6 +133,7 @@ class Launcher:
             print(f'Local Search algorithm: A={A1}, B={B1}, F={F1}')
         if self.run_genetic:
             print(f'Genetic algorithm: A={A2}, B={B2}, F={F2}')
+        print('\033[0m')
 
     def generate_task_from_file(self, path):
         print(f'\nReading file: {path}')

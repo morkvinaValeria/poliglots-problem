@@ -7,7 +7,7 @@ class Exact:
 
     def apply(self):
         if(self.log):
-            print('\n*** Exact Algorithm ***')
+            print('\033[93m'+'\n*** Exact Algorithm ***'+'\033[0m')
         LPairs = self.__find_all_pairs()
         bestSol = None
         goalVals = None
@@ -33,7 +33,7 @@ class Exact:
                 goalVals = [A, B]
         if self.log:
             print(
-                f'\nResult: A,B=({self.L[goalVals[0]]},{self.L[goalVals[1]]}), F = {bestSol}')
+                '\033[93m'+f'\nResult: A,B=({self.L[goalVals[0]]},{self.L[goalVals[1]]}), F = {bestSol}'+'\033[0m')
         return self.L[goalVals[0]], self.L[goalVals[1]], bestSol
 
     def __find_all_pairs(self):
