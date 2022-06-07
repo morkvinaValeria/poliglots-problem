@@ -9,7 +9,7 @@ if argv[1] == 'help':
     print('-------------------------------------------------------------------')
     print('Values for the following arguments is assigned with \'=\' character')
     print('+  r_min     - min problem size, min = 4, 4 by default (for statistical experiments)')
-    print('+  r_max     - max problem size (for statistical experiments)')
+    print('+  r_max     - max problem size (for statistical experiments), max = 4200')
     print('+  r_step    - step of problem sizes from r_min to r_max, 1 by default (for statisctical experiments)')
     print('+  i_tasks   - quantity of random tasks of each problem size (for statistical experiments)')
     print('+  n_ratio   - ratio of number of poliglots to number of languages, 10 by default, max = 10')
@@ -32,7 +32,7 @@ else:
         print(f'Setting param {key} to {value}')
     launcher = Launcher(params)
     print('\n')
-    if int(params['n_ratio']) > 10:
+    if int(params['n_ratio']) > 10 or int(params['r_max']) > 4200 or int(params['r_min']) < 4 or int(params['r_min']) > int(params['r_max']):
         print('Enter valid command, please see help')
     elif 'task_size' in params:
         m, n = params['task_size'].split(',')
