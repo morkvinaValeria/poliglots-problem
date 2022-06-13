@@ -124,12 +124,11 @@ class Launcher:
         plt.show()
 
     def individual(self, L, T):
-        print(f'\nm={len(L[0])}, n={len(L)}\n')
+        print(f'\nm={len(T[0])}, n={len(T)}\n')
         for row in T:
             print(*row, sep=' ')
         Aopt, Bopt, Fopt, A1, B1, F1, A2, B2, F2 = None, None, None, None, None, None, None, None, None
         if self.run_exact:
-            print(self.log)
             exact = Exact(L, T, self.log)
             Aopt, Bopt, Fopt = exact.apply()
         if self.run_local:
