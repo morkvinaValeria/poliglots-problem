@@ -32,8 +32,9 @@ else:
         print(f'Setting param {key} to {value}')
     launcher = Launcher(params)
     print('\n')
-    if int(params['n_ratio']) > 10 or int(params['r_max']) > 4200 or int(params['r_min']) < 4 or int(params['r_min']) > int(params['r_max']):
-        print('Enter valid command, please see help')
+    if 'n_ratio' in params or 'r_max' in params or 'r_min' in params:
+        if int(params['n_ratio']) > 10 or int(params['r_max']) > 4200 or int(params['r_min']) < 4 or int(params['r_min']) > int(params['r_max']):
+            print('Enter valid command, please see help')
     elif 'task_size' in params:
         m, n = params['task_size'].split(',')
         L, T = launcher.generate_task(int(m), int(n))
